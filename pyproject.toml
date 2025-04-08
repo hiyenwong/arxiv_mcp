@@ -1,10 +1,21 @@
 [project]
 name = "arxiv-mcp"
 version = "0.1.0"
-description = "Add your description here"
+description = "arxiv mcp"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "arxiv>=2.2.0",
     "mcp[cli]>=1.6.0",
 ]
+[[project.authors]]
+name = "Hi Yen Wong"
+email = "robinwong51@gmail.com"
+
+
+[build-system]
+requires = [ "hatchling",]
+build-backend = "hatchling.build"
+
+[project.scripts]
+arxiv-mcp = "arxiv_mcp:main"
