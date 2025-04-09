@@ -1,0 +1,1 @@
+packages = ["src/arxiv_mcp"]

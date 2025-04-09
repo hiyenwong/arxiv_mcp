@@ -80,4 +80,4 @@ Hiyen Wong
 
 ## 许可证
 
-[许可证信息待补充]
+[Apache License]
