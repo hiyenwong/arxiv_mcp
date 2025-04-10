@@ -2,7 +2,6 @@
 from mcp.server.fastmcp import FastMCP
 from mcp.server.fastmcp.prompts import base
 from paper_interpreter import PaperInterpreter
-import asyncio
 from typing import List, Dict, Any
 
 # Create an MCP server
@@ -18,7 +17,7 @@ async def arxiv_search(query: str) -> List[Dict[str, Any]]:
     # Placeholder for actual search logic
     # In a real implementation, this would interact with the Arxiv API or database
     pi = PaperInterpreter()
-    return asyncio.run(main=pi.search_papers("quantum computing", max_results=5))
+    return await pi.search_papers(query, max_results=5)
 
 
 @mcp.prompt()
@@ -36,10 +35,3 @@ def query_prompt(message: str) -> list[base.Message]:
             "The system will process your query and return relevant academic papers matching your search criteria from the arXiv database of scientific papers and preprints."
         ),
     ]
-
-
-# Add a dynamic greeting resource
-@mcp.resource("greeting://{name}")
-def get_greeting(name: str) -> str:
-    """Get a personalized greeting"""
-    return f"Hello, {name}!"
