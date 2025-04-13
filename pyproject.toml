@@ -7,6 +7,7 @@ requires-python = ">=3.13"
 dependencies = [
     "arxiv>=2.2.0",
     "mcp[cli]>=1.6.0",
+    "ux>=0.7.0" # Added ux dependency
 ]
 [[project.authors]]
 name = "Hi Yen Wong"
