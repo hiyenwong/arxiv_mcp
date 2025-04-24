@@ -3,6 +3,8 @@ from typing import Any, Dict, List
 import arxiv
 
 from plugin_utils import PluginMetadata
+import requests
+from bs4 import BeautifulSoup
 
 metadata = PluginMetadata(
     name="paper_interpreter",
@@ -34,6 +36,10 @@ class PaperInterpreter:
                     "summary": paper.summary,
                     "published": paper.published.strftime("%Y-%m-%d"),
                     "pdf_url": paper.pdf_url,
+                    "doi": paper.doi,
+                    "html_url": paper.pdf_url.replace("/pdf/", "/html/")
+                    if paper.pdf_url
+                    else None,
                     "entry_id": paper.entry_id,
                 }
             )
@@ -65,12 +71,36 @@ class PaperInterpreter:
         # response = await llm_client.chat.completions.create(...)
 
         # For now, return a placeholder
-        return {
-            "paper_id": paper_id,
-            "title": paper.title,
-            "interpretation": "LLM interpretation would go here",
-        }
+        return {"paper_id": paper_id, "title": paper.title, "abstract": {paper.summary}}
 
+    def fetch_html(self, html_url: str):
+        """
+        从指定URL获取HTML内容
 
-def create_plugin():
-    return {"metadata": metadata, "handler": PaperInterpreter()}
+        参数:
+            url (str): 要获取的网页URL
+
+        返回:
+            tuple: (html内容字符串, BeautifulSoup解析对象)
+        """
+        try:
+            # 发送HTTP GET请求
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+            }
+            response = requests.get(html_url, headers=headers, timeout=10)
+
+            # 检查响应状态码
+            response.raise_for_status()
+
+            # 获取HTML内容
+            html_content = response.text
+
+            # 使用BeautifulSoup解析HTML
+            soup = BeautifulSoup(html_content, "html.parser")
+
+            return html_content, soup
+
+        except requests.exceptions.RequestException as e:
+            print(f"请求错误: {e}")
+            return None, None
